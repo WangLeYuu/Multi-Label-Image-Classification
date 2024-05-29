@@ -101,6 +101,7 @@ python predict.py
 ## License
 
 This project is licensed under the Apache 2.0 license. For detailed information, please refer to the LICENSE file.
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Acknowledgement
 
