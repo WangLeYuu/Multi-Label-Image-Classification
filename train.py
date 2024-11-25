@@ -94,6 +94,7 @@ if __name__ == '__main__':
             accuracy_article += batch_accuracy_article
 
             loss_train.backward()
+            optimizer.step()
         sch.step()
 
         # Print epoch, total loss, loss for each category, accuracy for each category
