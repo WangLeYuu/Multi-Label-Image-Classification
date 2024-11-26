@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image  
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
@@ -56,20 +56,19 @@ def validate(model, dataloader, logger, iteration, device, checkpoint):
 
     logger.add_scalar('val_loss', avg_loss, iteration)
     logger.add_scalar('val_color_acc', accuracy_color, iteration)
-    logger.add_scalar('val_color_acc', accuracy_gender, iteration)
-    logger.add_scalar('val_color_acc', accuracy_article, iteration)
+    logger.add_scalar('val_gender_acc', accuracy_gender, iteration)
+    logger.add_scalar('val_article_acc', accuracy_article, iteration)
 
     model.train()
 
 
-def visualize_grid(model, dataloader, attributes, device, show_cn_matrices=True, show_images=True, checkpoint=None,
-                   show_gt=False):
+def visualize_grid(model, dataloader, attributes, show_cn_matrices=True, show_images=True, checkpoint=None, show_gt=True):
     if checkpoint is not None:
         model, _ = checkpoint_load(model, checkpoint)
     model.eval()
 
     # Define image list
-    imgs = []
+    imgs = []       
 
     # Define a list of predicted results (predicted labels, predicted color labels, predicted gender labels, predicted article labels)
     labels, predicted_color_all, predicted_gender_all, predicted_article_all = [], [], [], []
@@ -207,18 +206,17 @@ if __name__ == '__main__':
     test_dataset = FashionDataset(val_csv_path, attributes, val_transform)
     test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
-    model = MultiOutputModel(n_color_classes=attributes.num_colors, n_gender_classes=attributes.num_genders,
-                             n_article_classes=attributes.num_articles).to('cpu')
+    model = MultiOutputModel(n_color_classes=attributes.num_colors, n_gender_classes=attributes.num_genders, n_article_classes=attributes.num_articles).to('cpu')
 
-    visualize_grid(model, test_dataloader, attributes, device, checkpoint)
+    visualize_grid(model, test_dataloader, attributes, show_cn_matrices=True, show_images=True, checkpoint=checkpoint, show_gt=False)
 
     """
     Single image testing
     """
     model = torch.load(checkpoint, map_location='cpu')
-    img = Image.open(predict_image_path)
-    if img.mode != 'RGB':
-        img = img.convert('RGB')
+    img = Image.open(predict_image_path)  
+    if img.mode != 'RGB':  
+        img = img.convert('RGB')  
     img_tensor = val_transform(img).unsqueeze(0)
     with torch.no_grad():
         outputs = model(img_tensor)
@@ -226,7 +224,8 @@ if __name__ == '__main__':
         _, predicted_gender = outputs['gender'].cpu().max(1)
         _, predicted_article = outputs['article'].cpu().max(1)
 
-        print("Predicted color ====> {}, gender: {}, article: {}".format(
+        print("Predicted 【color: {}】, 【gender: {}】, 【article: {}】".format(
             attributes.color_id_to_name[predicted_color.item()],
             attributes.gender_id_to_name[predicted_gender.item()],
             attributes.article_id_to_name[predicted_article.item()]))
+
