@@ -37,6 +37,10 @@ val_dataset = FashionDataset(val_csv_path, attributes, val_transform)
 train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
 val_dataloader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
+print('Number of colors labels: ', attributes.num_colors)
+print('Number of genders labels: ', attributes.num_genders)
+print('Number of articles labels: ', attributes.num_articles)
+
 # Load model
 model = MultiOutputModel(n_color_classes=attributes.num_colors,
                             n_gender_classes=attributes.num_genders,
