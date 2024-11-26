@@ -15,7 +15,8 @@
 > - split_data. py: Divide the dataset;
 > - model. py: Building a neural network model;
 > - train.py: Train the model;
-> - predict. py: Evaluate the training model.
+> - predict. py: Evaluate the training model;
+> - model_transfer. py: Transfer .pth model to .onnx model.
 
 ## Requirements
 
